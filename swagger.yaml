@@ -39,92 +39,89 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/servicesInfo'
+                  $ref: '#/components/schemas/categories'
                 example:
-                  - serviceId: 120
-                    displayName: electric bill
-                    serviceType: BILL_PAYMENT
-                    categoryName: electricity
-                    steps:
-                      - stepId: 1
-                        stepName: INQUIRY
-                        link: /step/inquiry
-                        nextStepId: 2
-                        stepOrder: 1
-                        attributes:
-                          - id: 1
-                            name: billReference
-                            type: String
-                            minLength: 4
-                            maxLength: 15
-                            shownInUI: true
-                            regexValidation: null
-                            sourceStepId: 0
-                            editable: true
-                            displayName: رقم الفاتورة/bill reference
-                      - stepId: 2
-                        stepName: PAY
-                        link: /step/pay
-                        stepOrder: 2
-                        attributes:
-                          - id: 2
-                            name: billReference
-                            type: String
-                            minLength: 4
-                            maxLength: 15
-                            shownInUI: true
-                            regexValidation: null
-                            sourceStepId: 1
-                            editable: false
-                            displayName: رقم الفاتورة/bill reference
+                  - displayName: electricity
+                    services:
+                      - serviceId: e112
+                        displayName: electric bill
+                        serviceType: BILL_PAYMENT
+                        steps:
+                          - stepId: 1
+                            stepName: INQUIRY
+                            apiUrl: /step/inquiry
+                            nextStepId: 2
+                            stepOrder: 1
+                            attributes:
+                              - id: 1
+                                name: billReference
+                                type: String
+                                minLength: 4
+                                maxLength: 15
+                                shownInUI: true
+                                regexValidation: null
+                                sourceResponseStepId: 0
+                                editable: true
+                                displayName: رقم الفاتورة/bill reference
+                          - stepId: 2
+                            stepName: PAY
+                            apiUrl: /step/pay
+                            stepOrder: 2
+                            attributes:
+                              - id: 2
+                                name: billReference
+                                type: String
+                                minLength: 4
+                                maxLength: 15
+                                shownInUI: true
+                                regexValidation: null
+                                sourceResponseStepId: 1
+                                editable: false
+                                displayName: رقم الفاتورة/bill reference
 
-                          - id: 3
-                            name: amount
-                            type: String
-                            minLength: 4
-                            maxLength: 15
-                            shownInUI: true
-                            regexValidation: null
-                            sourceStepId: 1
-                            editable: true
-                            displayName: ammount/المبلغ
-                            
-                  - serviceId: 121
-                    displayName: pubg charge
-                    serviceType: VOUCHER
-                    categoryName: Gaming
-                    steps:
-                      - stepId: 3
-                        stepName: PAY
-                        link: /step/pay
-                        stepOrder: 1
-                        attributes:
-                          - id: 4
-                            name: mobile number
-                            type: String
-                            minLength: 11
-                            maxLength: 11
-                            shownInUI: true
-                            regexValidation: "^01.{9}$"
-                            sourceStepId: 0
-                            editable: true
-                            displayName: رقم الهاتف/mobile number
-                            
-                          - id: 5
-                            name: voucherValue
-                            type: Select
-                            shownInUI: true
-                            sourceStepId: 0
-                            editable: true
-                            displayName: voucher type/نوع الفئة
-                            options:
-                              - voucherId: 1
-                                displayName: pubg 50 UC
-                                value: 500
-                              - voucherId: 2
-                                displayName: pubg 100 UC
-                                value: 1000
+                              - id: 3
+                                name: amount
+                                type: String
+                                minLength: 4
+                                maxLength: 15
+                                shownInUI: true
+                                regexValidation: null
+                                sourceResponseStepId: 1
+                                editable: true
+                                displayName: ammount/المبلغ
 
+                      - serviceId: p121
+                        displayName: pubg charge
+                        serviceType: TOP_UP
+                        steps:
+                          - stepId: 3
+                            stepName: PAY
+                            apiUrl: /step/pay
+                            stepOrder: 1
+                            attributes:
+                              - id: 4
+                                name: mobileNumber
+                                type: String
+                                minLength: 11
+                                maxLength: 11
+                                shownInUI: true
+                                regexValidation: "^01.{9}$"
+                                sourceStepId: 0
+                                editable: true
+                                displayName: رقم الهاتف/mobile number
+
+                              - id: 5
+                                name: voucherValue
+                                type: Select
+                                shownInUI: true
+                                sourceStepId: 0
+                                editable: true
+                                displayName: voucher type/نوع الفئة
+                                options:
+                                  - optionId: option1
+                                    displayName: pubg 50 UC
+                                  - optionId: option2
+                                    displayName: pubg 100 UC
         '401':
           $ref: '#/components/responses/UnauthorizedError'
 
@@ -133,12 +130,12 @@ paths:
       tags:
         - service
       summary: this endpoint is dynamic endpoint, its based on each sourceStepId with dynamic the corresponding body and dynamic response.
-      description: this endpoint will have different link that is provided in each sourceStepId attribute. The body of the request will be each attribute name in the step and it's value. the response will be a dynamic map of key,value containing data that will be used in next step, displayed to users or used by ivend. the attributes used by ived are "reciept" which contains a format to be printed for the user, "sapCode" which is the sap code that will be used for this transaction, "sapQuantity" which is the number od items of that sap code that will be used in this transaction,"kazyonTransactionId" which should be returned in first step, used in all next steps and loggeed in UDT table for each transaction. 
+      description: this endpoint will have different link that is provided in each sourceStepId attribute. The body of the request will be each attribute name in the step and it's value. the response will be a dynamic map of key,value containing data that will be used in next step, displayed to users or used by ivend. the attributes used by ived are "reciept" which contains a format to be printed for the user, "sapCode" which is the sap code that will be used for this transaction, "sapQuantity" which is the number od items of that sap code that will be used in this transaction,"kazyonTransactionId" which should be returned in first step, used in all next steps and loggeed in UDT table for each transaction.
       parameters:
         - name : serviceName
           in: path
           required: true
-          schema: 
+          schema:
             type: string
         - $ref: '#/components/parameters/storeCode'
         - $ref: '#/components/parameters/storePassword'
@@ -165,7 +162,7 @@ paths:
     post:
       tags:
         - service
-      summary: this endpoint will comfirm payment and do a real payment using transactionId returned in all steps.NOTE to call this endpoint you need to achive previous steps and get successfull response in all steps. 
+      summary: this endpoint will confirm payment and do a real payment using transactionId returned in all steps.NOTE to call this endpoint you need to achive previous steps and get successfull response in all steps.
       description: this endpoint will be called after the final step, to achive a real payment process using transactionId that will be returned in all previos steps.
       parameters:
         - $ref: '#/components/parameters/storeCode'
@@ -191,7 +188,7 @@ paths:
 
         '401':
           $ref: '#/components/responses/UnauthorizedError'
-  
+
 
 
 
@@ -225,15 +222,15 @@ components:
           type: string
           description: contains the id returned all steps.
           example: 120
-       
+
 
     step:
       type: object
       example:
-          serviceId: 120
-          kazyonTransactionId: 10
-          billReference: 123123123
-          ammount: 100
+        serviceId: 120
+        kazyonTransactionId: 10
+        billReference: 123123123
+        ammount: 100
       properties:
         serviceId:
           type: string
@@ -248,7 +245,7 @@ components:
       type: object
       example:
         kazyonTransactionId: 1201205
-        reciept: <h1>reciept</h1> 
+        reciept: <h1>reciept</h1>
       properties:
         reciept:
           type: string
@@ -258,7 +255,7 @@ components:
           type: string
           description: contains the id returned in all steps.
           example: 1201205
-       
+
     stepResponse:
       type: object
       example:
@@ -271,80 +268,92 @@ components:
           type: string
           description: contains the unique identifier for the chosen service
           example: 120
-          
-          
-    servicesInfo:
+
+
+    categories:
       type: object
       properties:
-        serviceId:
-          type: number
         displayName:
           type: string
-        categoryName: 
-          type: string
-          description: name for category under which this service should be listed
-        serviceType:
-          type: string
-          enum:
-            - BILL_PAYMENT
-            - VOUCHER
-        steps:
+        services:
           type: array
-          description: list of steps needed to be done to use this service using stepOrder
           items:
             type: object
             properties:
-              stepId:
-                type: number
-                description: unique identifier for each step
-                example: 1
-              stepName:
+              serviceId:
                 type: string
-                description: the name of the step
-                example: PAY
-              link:
+              displayName:
                 type: string
-                description: the relative path to the end point call in this step 
-                example: /pay
-              stepOrder:
-                type: number
-                description: indintifies the order for this step starting from 1
-                example: 1
-              attributes:
+                description: the name for the service which should be displayed for the user
+              serviceType:
+                type: string
+                enum:
+                  - BILL_PAYMENT
+                  - TOP_UP
+              steps:
                 type: array
-                description: list of attributes that will be used in each step. each attribute has parameters that used for validations or filling the attribute. if any of those parameters is null it should be ignored
+                description: list of steps needed to be done to use this service using stepOrder
                 items:
                   type: object
                   properties:
-                    id:
+                    stepId:
                       type: number
-                    name:
+                      description: unique identifier for each step
+                      example: 1
+                    stepName:
                       type: string
-                    minLength:
+                      description: the name of the step
+                      example: PAY
+                    apiUrl:
+                      type: string
+                      description: the relative path to the endpoint call in this step which will always be POST request.
+                      example: /pay
+                    stepOrder:
                       type: number
-                    maxLength:
-                      type: number
-                    shownInUI:
-                      type: boolean
-                    regexValidation:
+                      description: indintifies the order for this step starting from 1
+                      example: 1
+                    nextStepId:
                       type: string
-                    displayName:
-                      type: string
-                    source:
-                      type: string
-                      description: can be 0 indecating that the user will fill it or any step id for example 2
-                    editable:
-                      type: boolean
-                      description: indicates whether this field can be edited by user or not. if not editable this filled will be filled from an previous step referenced in attribute source
-                    options:
+                      description: string value contains the step id that will be done after this step. If the value equals FINAL then this is the final step
+                      example: "FINAL"
+                    attributes:
                       type: array
+                      description: list of attributes that will be sent in request body in each step. each attribute has parameters that used for validations or filling the attribute. if any of those parameters is null it should be ignored.
                       items:
                         type: object
                         properties:
-                          voucherId:
+                          id:
                             type: number
+                          name:
+                            type: string
+                          attributeType:
+                            type: string
+                            description: enum indecating the type of the attribute can be TEXT means it's a text field or SELECT means it's a radio selection.
+                          minLength:
+                            type: number
+                          maxLength:
+                            type: number
+                          shownInUI:
+                            type: boolean
+                          regexValidation:
+                            type: string
                           displayName:
                             type: string
-                          voucherValue:
-                            type: number
-                              
+                          sourceResponseStepId:
+                            type: string
+                            description: can be 0 indecating that the user will fill it or any step id for example 2. in this case the value of this attribute will be filled from response of step with id equals 2.
+                          editable:
+                            type: boolean
+                            description: indicates whether this field can be edited by user or not. if not editable this field will be filled from an previous step response referenced in attribute sourceResponseStepId
+                          options:
+                            type: array
+                            description: list of avaiable selections for the user which he will select only one of them
+                            items:
+                              type: object
+                              properties:
+                                optionId:
+                                  type: string
+                                  description: the value that will be sent in the request.
+                                displayName:
+                                  type: string
+                                  description: the displayed name for the option in the selection list for the user.
